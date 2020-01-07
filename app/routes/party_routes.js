@@ -77,7 +77,7 @@ router.delete('/party/:id', requireToken, (req, res, next) => {
 
 // UPDATE
 router.patch('/party/:id', requireToken, (req, res, next) => {
-  delete req.body.example.owner
+  delete req.body.party.owner
 
   Party.findById(req.params.id)
     .then(handle404)
