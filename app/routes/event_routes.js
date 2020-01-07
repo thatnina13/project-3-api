@@ -31,7 +31,7 @@ const router = express.Router()
 router.get('/events', (req, res, next) => {
   Event.find()
     .then(events => {
-      return events.map(book => event.toObject())
+      return events.map(event => event.toObject())
     })
     .then(events => {
       res.json({events})
