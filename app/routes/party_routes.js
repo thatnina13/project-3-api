@@ -4,7 +4,7 @@ const express = require('express')
 const passport = require('passport')
 
 // pull in Mongoose model for examples
-const Event = require('../models/event')
+const Party = require('../models/party')
 
 // this is a collection of methods that help us detect situations when we need
 // to throw a custom error
@@ -18,7 +18,7 @@ const requireOwnership = customErrors.requireOwnership
 
 // this is middleware that will remove blank fields from `req.body`, e.g.
 // { example: { title: '', text: 'foo' } } -> { example: { text: 'foo' } }
-const removeBlanks = require('../../lib/remove_blank_fields')
+// const removeBlanks = require('../../lib/remove_blank_fields')
 // passing this as a second argument to `router.<verb>` will make it
 // so that a token MUST be passed for that route to be available
 // it will also set `req.user`
@@ -28,33 +28,51 @@ const requireToken = passport.authenticate('bearer', { session: false })
 const router = express.Router()
 
 // INDEX
-router.get('/events', (req, res, next) => {
-  Event.find()
-    .then(events => {
-      return events.map(event => event.toObject())
+router.get('/party', (req, res, next) => {
+  Party.find()
+    .then(party => {
+      return party.map(party => party.toObject())
     })
-    .then(events => {
-      res.json({events})
+    .then(party => {
+      res.json({ party })
     })
+    .catch(next)
+})
+
+// CREATE
+router.post('/party', requireToken, (req, res, next) => {
+  // set owner of new example to be current user
+  req.body.party.owner = req.user.id
+
+  Party.create(req.body.party)
+    // respond to succesful `create` with status 201 and JSON of new "example"
+    .then(example => {
+      res.status(201).json({ party: example.toObject() })
+    })
+    // if an error occurs, pass it off to our error handler
+    // the error handler needs the error message and the `res` object so that it
+    // can send an error message back to the client
     .catch(next)
 })
 
 // SHOW
-router.get('/events/:id', (req, res, next) => {
-  Event.findById(req.params.id)
+router.get('/party/:id', (req, res, next) => {
+  Party.findById(req.params.id)
     .then(handle404)
-    .then(event => res.status(200).json({event: event.toObject()}))
+    .then(party => res.status(200).json({party: party.toObject()}))
     .catch(next)
 })
 
-//DELETE
-router.delete('/events/:id', requireToken, (req, res, next) => {
-  Event.findById(req.params.id)
+// DELETE
+router.delete('/party/:id', requireToken, (req, res, next) => {
+  Party.findById(req.params.id)
     .then(handle404)
-    .then(event => {
-      requireOwnership(req, event)
-      event.deleteOne()
+    .then(party => {
+      requireOwnership(req, party)
+      party.deleteOne()
     })
     .then(() => res.sendStatus(204))
     .catch(next)
 })
+
+module.exports = router
