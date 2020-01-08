@@ -75,4 +75,19 @@ router.delete('/party/:id', requireToken, (req, res, next) => {
     .catch(next)
 })
 
+// UPDATE
+router.patch('/party/:id', requireToken, (req, res, next) => {
+  delete req.body.party.owner
+
+  Party.findById(req.params.id)
+    .then(handle404)
+    .then(party => {
+      requireOwnership(req, party)
+
+      return party.updateOne(req.body.party)
+    })
+    .then(() => res.sendStatus(204))
+    .catch(next)
+})
+
 module.exports = router
