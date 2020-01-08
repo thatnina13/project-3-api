@@ -30,7 +30,7 @@ const router = express.Router()
 // INDEX
 router.get('/rsvp', (req, res, next) => {
   Rsvp.find()
-    // .populate('event')
+    // .populate('party')
     .then(rsvps => {
       return rsvps.map(rsvp => rsvp.toObject())
     })
@@ -44,11 +44,12 @@ router.get('/rsvp', (req, res, next) => {
 router.get('/myrsvp/:id', (req, res, next) => {
   const userId = req.user
   Rsvp.find(userId)
+    .populate('party')
     .then(rsvp => {
       return rsvp.map(rsvp => rsvp.toObject())
     })
-    .then(rsvp => {
-      res.json({ rsvp })
+    .then(rsvps => {
+      res.json({ rsvps })
     })
     .catch(next)
 })
