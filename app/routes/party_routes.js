@@ -5,7 +5,6 @@ const passport = require('passport')
 
 // pull in Mongoose model for examples
 const Party = require('../models/party')
-// const User = require('../models/user.js')
 
 // this is a collection of methods that help us detect situations when we need
 // to throw a custom error
@@ -40,31 +39,10 @@ router.get('/party', (req, res, next) => {
     .catch(next)
 })
 
-// INDEX for get my parties.
-// function to get parties
-// function getUserWithParties(user) {
-//   // .findOne may not be applicable as we need to find many parties?
-//   return User.findOne({ user: user })
-//     .populate('parties').exec((err, parties) => {
-//       // console log only used for testing purposes, will later be replaced with showing all the parties (using handlebars/jquery?)
-//       console.log("Populated User " + parties);
-//       })
-router.get('/myparty/:id', (req, res, next) => {
-  const userId = req.user
-  Party.find(userId)
-    .then(party => {
-      return party.map(party => party.toObject())
-    })
-    .then(party => {
-      res.json({ party })
-    })
-    .catch(next)
-})
-
 // CREATE
 router.post('/party', requireToken, (req, res, next) => {
   // set owner of new example to be current user
-  req.body.party.owner = req.user.id
+  req.body.party.user = req.user.id
 
   Party.create(req.body.party)
     // respond to succesful `create` with status 201 and JSON of new "example"
