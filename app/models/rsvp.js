@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
-const resSchema = new mongoose.Schema({
-  attendees: {
+const rsvpSchema = new mongoose.Schema({
+  attendee: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
@@ -15,4 +15,4 @@ const resSchema = new mongoose.Schema({
   timestamps: true
 })
 
-module.exports = mongoose.model('Res', resSchema)
+module.exports = mongoose.model('Rsvp', rsvpSchema)
