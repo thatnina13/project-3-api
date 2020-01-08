@@ -30,7 +30,7 @@ const router = express.Router()
 // INDEX
 router.get('/rsvp', (req, res, next) => {
   Rsvp.find()
-    .populate('event')
+    // .populate('event')
     .then(rsvps => {
       return rsvps.map(rsvp => rsvp.toObject())
     })
@@ -43,8 +43,7 @@ router.get('/rsvp', (req, res, next) => {
 // CREATE
 router.post('/rsvp', requireToken, (req, res, next) => {
   // set owner of new example to be current user
-  // req.body.rsvp.owner = req.user.id
-  // req.body.rsvp.attendee = req.party.id
+  req.body.rsvp.user = req.user.id
 
   Rsvp.create(req.body.rsvp)
     // respond to succesful `create` with status 201 and JSON of new "example"
