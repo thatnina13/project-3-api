@@ -40,6 +40,19 @@ router.get('/rsvp', (req, res, next) => {
     .catch(next)
 })
 
+// GET MY RSVP
+router.get('/myrsvp/:id', (req, res, next) => {
+  const userId = req.user
+  Rsvp.find(userId)
+    .then(rsvp => {
+      return rsvp.map(rsvp => rsvp.toObject())
+    })
+    .then(rsvp => {
+      res.json({ rsvp })
+    })
+    .catch(next)
+})
+
 // CREATE
 router.post('/rsvp', requireToken, (req, res, next) => {
   // set owner of new example to be current user
