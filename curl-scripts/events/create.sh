@@ -8,7 +8,7 @@ curl "${API}${URL_PATH}" \
   --header "Authorization: Bearer ${TOKEN}" \
   --data '{
     "party": {
-      "date": "'"${TEXT}"'",
+      "date": "'"${DATE}"'",
       "details": "'"${DETAILS}"'",
       "title": "'"${TITLE}"'"
     }
