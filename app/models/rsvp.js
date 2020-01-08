@@ -8,7 +8,7 @@ const rsvpSchema = new mongoose.Schema({
   },
   party: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Event',
+    ref: 'Party',
     required: true
   }
 }, {

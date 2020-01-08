@@ -68,9 +68,9 @@ router.get('/rsvp/:id', (req, res, next) => {
 router.delete('/rsvp/:id', requireToken, (req, res, next) => {
   Rsvp.findById(req.params.id)
     .then(handle404)
-    .then(res => {
-      requireOwnership(req, res)
-      res.deleteOne()
+    .then(rsvp => {
+      requireOwnership(req, rsvp)
+      rsvp.deleteOne()
     })
     .then(() => res.sendStatus(204))
     .catch(next)
