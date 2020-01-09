@@ -75,17 +75,18 @@ router.delete('/party/:id', requireToken, (req, res, next) => {
     .catch(next)
 })
 // GET MY Party
-router.get('/myparty/:id', (req, res, next) => {
-  const userId = req.user
-  Party.find(userId)
-    .then(party => {
-      return party.map(party => party.toObject())
-    })
-    .then(party => {
-      res.json({ party })
-    })
-    .catch(next)
-})
+// router.get('/myparty/:id', requireToken, (req, res, next) => {
+//   const userId = req.user._id
+//
+//   Party.find({ user: userId })
+//     .then(party => {
+//       return party.map(party => party.toObject())
+//     })
+//     .then(party => {
+//       res.json({ party })
+//     })
+//     .catch(next)
+// })
 // UPDATE
 router.patch('/party/:id', requireToken, (req, res, next) => {
   delete req.body.party.owner
