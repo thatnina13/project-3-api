@@ -41,9 +41,9 @@ router.get('/rsvp', (req, res, next) => {
 })
 
 // GET MY RSVP
-router.get('/myrsvp/:id', (req, res, next) => {
-  const userId = req.user
-  Rsvp.find(userId)
+router.get('/myrsvp/', requireToken, (req, res, next) => {
+  const userId = req.user._id
+  Rsvp.find({ user: userId })
     .populate('party')
     .then(rsvp => {
       return rsvp.map(rsvp => rsvp.toObject())
