@@ -1,4 +1,5 @@
 
+
 # Project 3 API
 # Application Title: Single Page Application for creating and attending Parties
 This application allows the user to Party. More specifically, this SPA allows a user to view existing parties without having to sign up or sign in- making sure that everyone who wants to party, knows which parties are out there! Additionally, after signing in, a user can create a party, update a party, delete a party and view their RSVPs.
@@ -27,3 +28,5 @@ DELETE | /party/:id
 ### Wireframes and EDR:
 Wireframes, EDR's and additional planning can be found in the following google slide
 presentation:  https://docs.google.com/presentation/d/1rcabkTYRZCtJYQR4skBSHWnKED0E6XARQtLqtOZ2JEA/edit?usp=sharing
+=======
+
