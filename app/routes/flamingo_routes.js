@@ -29,29 +29,14 @@ const router = express.Router()
 
 // INDEX
 // GET /examples
-router.get('/flamingo', requireToken, (req, res, next) => {
+router.get('/flamingo', (req, res, next) => {
   Flamingo.find()
     .then(flamingo => {
-      // `examples` will be an array of Mongoose documents
-      // we want to convert each one to a POJO, so we use `.map` to
-      // apply `.toObject` to each one
       return flamingo.map(flamingo => flamingo.toObject())
     })
-    // respond with status 200 and JSON of the examples
-    .then(flamingo => res.status(200).json({ flamingo: flamingo }))
-    // if an error occurs, pass it to the handler
-    .catch(next)
-})
-
-// SHOW
-// GET /examples/5a7db6c74d55bc51bdf39793
-router.get('/flamingo/:id', requireToken, (req, res, next) => {
-  // req.params.id will be set based on the `:id` in the route
-  Flamingo.findById(req.params.id)
-    .then(handle404)
-    // if `findById` is succesful, respond with 200 and "example" JSON
-    .then(flamingo => res.status(200).json({ flamingo: flamingo.toObject() }))
-    // if an error occurs, pass it to the handler
+    .then(flamingo => {
+      res.json({ flamingo })
+    })
     .catch(next)
 })
 
@@ -59,12 +44,12 @@ router.get('/flamingo/:id', requireToken, (req, res, next) => {
 // POST /examples
 router.post('/flamingo', requireToken, (req, res, next) => {
   // set owner of new example to be current user
-  req.body.flamingo.owner = req.user.id
+  req.body.flamingo.user = req.user.id
 
   Flamingo.create(req.body.flamingo)
     // respond to succesful `create` with status 201 and JSON of new "example"
-    .then(flamingo => {
-      res.status(201).json({ flamingo: flamingo.toObject() })
+    .then(example => {
+      res.status(201).json({ flamingo: example.toObject() })
     })
     // if an error occurs, pass it off to our error handler
     // the error handler needs the error message and the `res` object so that it
@@ -72,26 +57,11 @@ router.post('/flamingo', requireToken, (req, res, next) => {
     .catch(next)
 })
 
-// UPDATE
-// PATCH /examples/5a7db6c74d55bc51bdf39793
-router.patch('/flamingo/:id', requireToken, removeBlanks, (req, res, next) => {
-  // if the client attempts to change the `owner` property by including a new
-  // owner, prevent that by deleting that key/value pair
-  delete req.body.flamingo.owner
-
+// SHOW
+router.get('/flamingo/:id', (req, res, next) => {
   Flamingo.findById(req.params.id)
     .then(handle404)
-    .then(example => {
-      // pass the `req` object and the Mongoose record to `requireOwnership`
-      // it will throw an error if the current user isn't the owner
-      requireOwnership(req, example)
-
-      // pass the result of Mongoose's `.update` to the next `.then`
-      return example.updateOne(req.body.example)
-    })
-    // if that succeeded, return 204 and no JSON
-    .then(() => res.sendStatus(204))
-    // if an error occurs, pass it to the handler
+    .then(flamingo => res.status(200).json({flamingo: flamingo.toObject()}))
     .catch(next)
 })
 
@@ -112,4 +82,18 @@ router.delete('/flamingo/:id', requireToken, (req, res, next) => {
     .catch(next)
 })
 
+// UPDATE
+router.patch('/flamingo/:id', requireToken, (req, res, next) => {
+  delete req.body.flamingo.owner
+
+  Flamingo.findById(req.params.id)
+    .then(handle404)
+    .then(flamingo => {
+      requireOwnership(req, flamingo)
+
+      return flamingo.updateOne(req.body.flamingo)
+    })
+    .then(() => res.sendStatus(204))
+    .catch(next)
+})
 module.exports = router
