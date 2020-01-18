@@ -67,21 +67,30 @@ router.get('/flamingo/:id', (req, res, next) => {
 
 // DESTROY
 // DELETE /examples/5a7db6c74d55bc51bdf39793
+// router.delete('/flamingo/:id', requireToken, (req, res, next) => {
+//   Flamingo.findById(req.params.id)
+//     .then(handle404)
+//     .then(flamingo => {
+//       // throw an error if current user doesn't own `example`
+//       requireOwnership(req, flamingo)
+//       // delete the example ONLY IF the above didn't throw
+//       flamingo.deleteOne()
+//     })
+//     // send back 204 and no content if the deletion succeeded
+//     .then(() => res.sendStatus(204))
+//     // if an error occurs, pass it to the handler
+//     .catch(next)
+// })
 router.delete('/flamingo/:id', requireToken, (req, res, next) => {
   Flamingo.findById(req.params.id)
     .then(handle404)
     .then(flamingo => {
-      // throw an error if current user doesn't own `example`
       requireOwnership(req, flamingo)
-      // delete the example ONLY IF the above didn't throw
       flamingo.deleteOne()
     })
-    // send back 204 and no content if the deletion succeeded
     .then(() => res.sendStatus(204))
-    // if an error occurs, pass it to the handler
     .catch(next)
 })
-
 // UPDATE
 router.patch('/flamingo/:id', requireToken, (req, res, next) => {
   delete req.body.flamingo.owner
