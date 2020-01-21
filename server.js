@@ -6,6 +6,7 @@ const cors = require('cors')
 // require route files
 const exampleRoutes = require('./app/routes/example_routes')
 const userRoutes = require('./app/routes/user_routes')
+const flamingoRoutes = require('./app/routes/flamingo_routes')
 const partyRoutes = require('./app/routes/party_routes')
 const rsvpRoutes = require('./app/routes/rsvp_routes')
 
@@ -66,6 +67,7 @@ app.use(requestLogger)
 app.use(exampleRoutes)
 app.use(userRoutes)
 app.use(partyRoutes)
+app.use(flamingoRoutes)
 app.use(rsvpRoutes)
 
 // register error handling middleware
