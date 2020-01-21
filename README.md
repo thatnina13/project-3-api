@@ -28,9 +28,9 @@ As a signed in user, I would like to see all flamingos.
 
 
 ### Party on ERD
-![Party On](https://imgur.com/NoBQbS5)
+![](https://imgur.com/NoBQbS5)
 ### Party on Wire Frames V2- Flamingos
-![Party On](https://imgur.com/LnidV9s)
+![](https://imgur.com/LnidV9s)
 ### Unsolved Problems & Future Goals
 Future goals for Party On
 
