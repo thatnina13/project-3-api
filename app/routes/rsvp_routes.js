@@ -30,7 +30,7 @@ const router = express.Router()
 // INDEX
 router.get('/rsvp', (req, res, next) => {
   Rsvp.find()
-    // .populate('event')
+    // .populate('party')
     .then(rsvps => {
       return rsvps.map(rsvp => rsvp.toObject())
     })
@@ -41,14 +41,15 @@ router.get('/rsvp', (req, res, next) => {
 })
 
 // GET MY RSVP
-router.get('/myrsvp/:id', (req, res, next) => {
-  const userId = req.user
-  Rsvp.find(userId)
+router.get('/myrsvp/', requireToken, (req, res, next) => {
+  const userId = req.user._id
+  Rsvp.find({ user: userId })
+    .populate('party')
     .then(rsvp => {
       return rsvp.map(rsvp => rsvp.toObject())
     })
-    .then(rsvp => {
-      res.json({ rsvp })
+    .then(rsvps => {
+      res.json({ rsvps })
     })
     .catch(next)
 })
@@ -91,7 +92,7 @@ router.delete('/rsvp/:id', requireToken, (req, res, next) => {
 
 // UPDATE
 router.patch('/rsvp/:id', requireToken, (req, res, next) => {
-  delete req.body.res.user
+  delete req.body.res.owner
 
   Rsvp.findById(req.params.id)
     .then(handle404)
